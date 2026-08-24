@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "exportedAt": 1787575007482,
+  "books": [
+    {
+      "title": "India China and the world",
+      "author": "Tansen Sen",
+      "isbn": "9780199485543",
+      "publisher": "Oxford",
+      "language": "English",
+      "coverUrl": "covers/b87a8b3d848f99e3.jpg",
+      "ageGroup": "above-15"
+    }
+  ]
+}
