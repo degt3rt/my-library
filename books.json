@@ -1,5 +1,26 @@
 {
   "schemaVersion": 1,
-  "exportedAt": 1787582012035,
-  "books": []
+  "exportedAt": 1787591962672,
+  "books": [
+    {
+      "title": "The Archaeology Of Mind Neural Origins Of Human Emotion",
+      "author": "Lucy Biven",
+      "isbn": "9780393705317",
+      "publisher": "W. W. Norton & Company",
+      "publishedYear": 2012,
+      "genre": "Neurobiology, Emotions, Neuropsychology",
+      "coverUrl": "covers/f99ca78be38b1077.jpg",
+      "ageGroup": "advanced"
+    },
+    {
+      "title": "Shudras",
+      "author": "Kancha Ilaiah Shepherd",
+      "isbn": "9780670092987",
+      "publisher": "Penguin Books India PVT, Limited",
+      "publishedYear": 2021,
+      "genre": "Asia, history",
+      "language": "English",
+      "ageGroup": "above-15"
+    }
+  ]
 }
