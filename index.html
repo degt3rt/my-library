@@ -7,7 +7,7 @@
   Bundled with the app at app/src/main/assets/publish/index.html
   and uploaded verbatim to the user's GitHub repo on publish.
 
-  viewerVersion: 4
+  viewerVersion: 7
     v3: F-09 — Content-Security-Policy meta added; image origins
          restricted to same-origin, data:, and the OpenLibrary /
          Google Books cover hosts. Mirrors CoverUrlAllowList.kt.
@@ -24,6 +24,14 @@
          events banner added under the title — hidden by default, revealed by a
          same-origin HEAD probe of events.html (the two pages publish
          independently), linking to the Events page when it exists.
+    v7: item kinds (ADR 0014 W3) — fixed kind facet (All kinds · Books ·
+         Magazines · Others); magazine issues group under their series
+         (from the additive top-level periodicals[]) with Issue /
+         Bound volume / Other badges; an unknown kind renders as a plain
+         item. books.json stays schema 1: older viewers ignore the new
+         keys, and this viewer reads them defensively on older payloads.
+         (The stale "viewerVersion: 4" line was bumped to match — v5/v6
+         landed without bumping it.)
 -->
 <html lang="en">
 <head>
@@ -32,16 +40,19 @@
 <!--
   F-09: Content-Security-Policy.
   default-src 'self' is the catch-all deny; everything else is an
-  explicit grant. img-src mirrors CoverUrlAllowList.ALLOWED_HOSTS
-  in the Kotlin publisher; any drift between the two is caught by
-  PublishViewerCspTest. 'unsafe-inline' on script/style is honest:
+  explicit grant. img-src mirrors CoverUrlAllowList.allowedHosts (+
+  the *.us.archive.org wildcard for CoverUrlAllowList.archiveNodePattern:
+  Open Library redirects about half of its covers through archive.org to
+  ia<digits>.us.archive.org storage nodes, D-3); any drift between the
+  list and this header is caught by viewer_csp_lockstep_test.dart.
+  'unsafe-inline' on script/style is honest:
   the viewer is a single self-contained file built around inline
   <style> and <script>. It does not protect against XSS in this
   document, but the F-09 threat is cross-origin image exfiltration,
   which img-src handles regardless of script-src.
 -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: https://covers.openlibrary.org https://books.google.com https://books.googleusercontent.com; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; connect-src 'self'; font-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'" />
-<title>My Library</title>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: https://covers.openlibrary.org https://books.google.com https://books.googleusercontent.com https://archive.org https://*.us.archive.org; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; connect-src 'self'; font-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'" />
+<title>Khoj Library</title>
 <style>
   :root {
     --saffron-50: #fff1e6;
@@ -154,9 +165,21 @@
   [data-theme="dark"] .avail-available { color: #7fdf95; }
   [data-theme="dark"] .avail-out { color: #ff8a80; }
   [data-theme="dark"] .avail-age { color: #90caf9; }
+  /* Kind badges (v7): Issue / Bound volume / Other. Neutral next to the
+     availability colours; books — and kinds this viewer does not know —
+     carry no badge (W3). */
+  .avail-kind { color: var(--fg-muted); border: 1px solid var(--border); }
+  /* Series group headers (v7): issues group under their magazine title.
+     In the card/grid layouts the header spans the whole grid row. */
+  .series-head { grid-column: 1 / -1; margin: 18px 0 2px; font-size: 16px; font-weight: 600; }
+  .series-head .meta, .series-row .meta { font-weight: 400; }
+  .series-row td { padding-top: 14px; font-weight: 600; }
   main { padding: 16px 20px 48px; }
 
   /* Layouts */
+  /* N12: wide tables scroll sideways on narrow screens instead of breaking
+     the page layout. */
+  .layout-table { overflow-x: auto; -webkit-overflow-scrolling: touch; }
   .layout-table table { width: 100%; border-collapse: collapse; }
   .layout-table th, .layout-table td {
     padding: 8px 10px;
@@ -224,7 +247,7 @@
 <header>
   <h1 id="title">
     <img class="logo" id="logo" src="" alt="" onerror="this.style.display='none'" />
-    <span>My Library</span>
+    <span>Khoj Library</span>
   </h1>
   <a class="events-banner" id="eventsBanner" href="events.html">
     <span class="bell">📣</span>
@@ -233,17 +256,25 @@
   </a>
   
   <div class="controls">
-    <input id="q" type="search" placeholder="Search title, author, genre, ISBN" autocomplete="off" />
-    <select id="sort">
+    <input id="q" type="search" placeholder="Search title, author, genre, ISBN" aria-label="Search the catalogue" autocomplete="off" />
+    <select id="sort" aria-label="Sort books by">
       <option value="addedDate">Recently added</option>
       <option value="language">Language</option>
       <option value="ageGroup">Age group</option>
     </select>
-    <select id="language"><option value="">All languages</option></select>
-    <button data-layout="table" class="active">Table</button>
-    <button data-layout="card">Cards</button>
-    <button data-layout="grid">Covers</button>
-    <button id="theme" title="Toggle dark mode">🌗</button>
+    <select id="language" aria-label="Filter by language"><option value="">All languages</option></select>
+    <!-- v7 kind facet (ADR 0013 U1/F3): kinds are app-defined and fixed, so
+         the options are static HTML — unlike the data-driven language list. -->
+    <select id="kind" aria-label="Filter by kind">
+      <option value="">All kinds</option>
+      <option value="book">Books</option>
+      <option value="magazine-issue">Magazines</option>
+      <option value="other">Others</option>
+    </select>
+    <button data-layout="table" class="active" aria-label="Table layout" aria-pressed="true">Table</button>
+    <button data-layout="card" aria-label="Card layout" aria-pressed="false">Cards</button>
+    <button data-layout="grid" aria-label="Cover grid layout" aria-pressed="false">Covers</button>
+    <button id="theme" title="Toggle dark mode" aria-label="Toggle dark mode">🌗</button>
   </div>
   <p class="meta" id="meta">Loading…</p>
 </header>
@@ -255,6 +286,7 @@
   const q = $("#q");
   const sortEl = $("#sort");
   const languageEl = $("#language");
+  const kindEl = $("#kind");
   const meta = $("#meta");
   const theme = $("#theme");
 
@@ -285,16 +317,22 @@
   document.querySelectorAll("button[data-layout]").forEach((b) => {
     b.addEventListener("click", () => {
       layout = b.dataset.layout;
-      document.querySelectorAll("button[data-layout]").forEach((x) => x.classList.toggle("active", x === b));
+      document.querySelectorAll("button[data-layout]").forEach((x) => {
+        x.classList.toggle("active", x === b);
+        // N12: keep the pressed state truthful for assistive tech.
+        x.setAttribute("aria-pressed", x === b ? "true" : "false");
+      });
       render();
     });
   });
   q.addEventListener("input", render);
   sortEl.addEventListener("change", render);
   languageEl.addEventListener("change", render);
+  kindEl.addEventListener("change", render);
 
   // ---- Data ----
   let books = [];
+  let periodicals = [];
   let loadError = null;
 
   async function load() {
@@ -309,6 +347,9 @@
         meta.textContent = "This file was created by a newer Pitak. Re-publish from your phone to update the viewer.";
       }
       books = Array.isArray(data.books) ? data.books : [];
+      // v7: additive key — absent on older payloads (or when the library
+      // has no magazines); read defensively either way.
+      periodicals = Array.isArray(data.periodicals) ? data.periodicals : [];
       populateFacets();
       render();
     } catch (e) {
@@ -370,11 +411,26 @@
     return AGE_LABEL[b.ageGroup] || "";
   }
 
+  // Kind badge (v7): Issue / Bound volume (a date range, ADR 0013 D4) /
+  // Other. Books — and kinds this viewer does not know — render as plain
+  // items with no badge (W3).
+  function kindBadge(b) {
+    if (b.kind === "magazine-issue") {
+      return b.issue && b.issue.boundUntil != null
+        ? ' <span class="avail avail-kind">Bound volume</span>'
+        : ' <span class="avail avail-kind">Issue</span>';
+    }
+    if (b.kind === "other") return ' <span class="avail avail-kind">Other</span>';
+    return "";
+  }
+
   function filterAndSort() {
     const needle = q.value.trim().toLowerCase();
     const sortKey = sortEl.value;
     const languageSel = languageEl.value.toLowerCase();
+    const kindSel = kindEl.value;
     let out = books.slice();
+    if (kindSel) out = out.filter((b) => (b.kind || "book") === kindSel);
     if (languageSel) out = out.filter((b) => (b.language || "").toLowerCase() === languageSel);
     if (needle) {
       out = out.filter((b) => {
@@ -405,30 +461,88 @@
     return out;
   }
 
+  // W3: an issue belongs under its series. periodicals[] maps uid → series;
+  // an issue whose series is absent (removed locally, or an older payload)
+  // renders as a plain item — its composed title already names the series.
+  // A group stands where the current sort put its first issue; inside the
+  // group the newest issue comes first (the app's IssueSorter order: date,
+  // then volume, then number, a missing part sorting last).
+  function groupIssues(list) {
+    const byUid = new Map();
+    for (const p of periodicals) {
+      if (p && p.periodicalUid) byUid.set(p.periodicalUid, p);
+    }
+    const groups = new Map(); // uid -> { series, issues }
+    const out = []; // [{ item } | { group }] in display order
+    for (const b of list) {
+      const uid = b && b.kind === "magazine-issue" && b.issue ? b.issue.periodicalUid : null;
+      const series = uid ? byUid.get(uid) : undefined;
+      if (!series) { out.push({ item: b }); continue; }
+      let g = groups.get(uid);
+      if (!g) {
+        g = { series: series, issues: [] };
+        groups.set(uid, g);
+        out.push({ group: g });
+      }
+      g.issues.push(b);
+    }
+    for (const g of groups.values()) g.issues.sort(cmpIssues);
+    return out;
+  }
+
+  function cmpIssues(a, b) {
+    const x = a.issue || {}, y = b.issue || {};
+    const num = (v) => (v == null ? -1 : Number(v) || 0);
+    return num(y.issueDate) - num(x.issueDate) ||
+           num(y.volume) - num(x.volume) ||
+           num(y.issueNumber) - num(x.issueNumber);
+  }
+
+  // Series group header content (v7): title plus a little public metadata.
+  function seriesLabel(p) {
+    const bits = [];
+    if (p.publisher) bits.push(escape(p.publisher));
+    if (p.issn) bits.push("ISSN " + escape(p.issn));
+    return escape(p.title) + (bits.length ? ` <span class="meta">${bits.join(" · ")}</span>` : "");
+  }
+
   function render() {
     if (loadError) return;
     const filtered = filterAndSort();
-    meta.textContent = `${filtered.length} of ${books.length} book${books.length === 1 ? "" : "s"}`;
+    meta.textContent = `${filtered.length} of ${books.length} item${books.length === 1 ? "" : "s"}`;
     if (filtered.length === 0) {
       root.innerHTML = '<div class="empty">No matches.</div>';
       return;
     }
+    const display = groupIssues(filtered);
     root.className = "layout-" + layout;
-    if (layout === "table") root.innerHTML = renderTable(filtered);
-    else if (layout === "card") root.innerHTML = renderCards(filtered);
-    else if (layout === "grid") root.innerHTML = renderGrid(filtered);
+    if (layout === "table") root.innerHTML = renderTable(display);
+    else if (layout === "card") root.innerHTML = renderCards(display);
+    else if (layout === "grid") root.innerHTML = renderGrid(display);
   }
 
-  function renderTable(list) {
-    const rows = list.map((b) => `
+  function tableRow(b) {
+    return `
       <tr>
-        <td>${escape(b.title)}${availBadge(b)}${b.titleTransliteration ? `<br><span class="meta">${escape(b.titleTransliteration)}</span>` : ""}</td>
+        <td>${escape(b.title)}${kindBadge(b)}${availBadge(b)}${b.titleTransliteration ? `<br><span class="meta">${escape(b.titleTransliteration)}</span>` : ""}</td>
         <td>${escape(b.author || "")}</td>
         <td>${escape(ageText(b))}</td>
         <td>${escape(b.publishedYear || "")}</td>
         <td>${escape(b.isbn || "")}</td>
       </tr>
-    `).join("");
+    `;
+  }
+
+  function renderTable(display) {
+    let rows = "";
+    for (const entry of display) {
+      if (entry.group) {
+        rows += `<tr class="series-row"><td colspan="5">${seriesLabel(entry.group.series)}</td></tr>`;
+        rows += entry.group.issues.map(tableRow).join("");
+      } else {
+        rows += tableRow(entry.item);
+      }
+    }
     return `
       <table>
         <thead>
@@ -439,10 +553,10 @@
     `;
   }
 
-  function renderCards(list) {
-    return `<div class="cards">` + list.map((b) => `
+  function cardHtml(b) {
+    return `
       <div class="card">
-        <h3>${escape(b.title)}${availBadge(b)}${ageBadge(b)}</h3>
+        <h3>${escape(b.title)}${kindBadge(b)}${availBadge(b)}${ageBadge(b)}</h3>
         ${b.titleTransliteration ? `<div class="row">${escape(b.titleTransliteration)}</div>` : ""}
         <div class="author">${escape(b.author || "")}</div>
         <div class="row">
@@ -451,10 +565,23 @@
         </div>
         <div class="row">${b.isbn ? "ISBN " + escape(b.isbn) : ""}</div>
       </div>
-    `).join("") + `</div>`;
+    `;
   }
 
-  function renderGrid(list) {
+  function renderCards(display) {
+    let html = `<div class="cards">`;
+    for (const entry of display) {
+      if (entry.group) {
+        html += `<h2 class="series-head">${seriesLabel(entry.group.series)}</h2>`;
+        html += entry.group.issues.map(cardHtml).join("");
+      } else {
+        html += cardHtml(entry.item);
+      }
+    }
+    return html + `</div>`;
+  }
+
+  function renderGrid(display) {
     // Inline SVG placeholder so we never hit a broken image icon. Sized 2:3
     // book aspect, themed to bg-alt.
     const placeholder = "data:image/svg+xml;utf8," + encodeURIComponent(
@@ -463,12 +590,22 @@
       `<path d='M20 28h20v6H20zM20 38h20v4H20zM20 46h20v4H20zM20 54h12v4H20z' fill='#e25822' fill-opacity='0.6'/>` +
       `</svg>`
     );
-    return `<div class="grid">` + list.map((b) => `
+    const figureHtml = (b) => `
       <figure>
         <img src="${b.coverUrl ? escape(b.coverUrl) : placeholder}" alt="${escape(b.title)}" loading="lazy" onerror="this.src='${placeholder}'" />
-        <figcaption><span class="title">${escape(b.title)}</span>${availBadge(b)}${ageBadge(b)}</figcaption>
+        <figcaption><span class="title">${escape(b.title)}</span>${kindBadge(b)}${availBadge(b)}${ageBadge(b)}</figcaption>
       </figure>
-    `).join("") + `</div>`;
+    `;
+    let html = `<div class="grid">`;
+    for (const entry of display) {
+      if (entry.group) {
+        html += `<h2 class="series-head">${seriesLabel(entry.group.series)}</h2>`;
+        html += entry.group.issues.map(figureHtml).join("");
+      } else {
+        html += figureHtml(entry.item);
+      }
+    }
+    return html + `</div>`;
   }
 
   load();
