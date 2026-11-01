@@ -1,7 +1,16 @@
 {
   "schemaVersion": 1,
-  "exportedAt": 1793534698647,
+  "exportedAt": 1793534867516,
   "books": [
+    {
+      "title": "Buddha",
+      "kind": "book",
+      "isbn": "9780007251643",
+      "language": "English",
+      "coverUrl": "covers/d113b383c1f325bf.jpg",
+      "ageGroup": "above-10",
+      "availability": "available"
+    },
     {
       "title": "Gendering Caste: Through a Feminist Lens",
       "kind": "book",
