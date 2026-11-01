@@ -1,7 +1,13 @@
 {
   "schemaVersion": 1,
-  "exportedAt": 1793536119459,
+  "exportedAt": 1793536217718,
   "books": [
+    {
+      "title": "Collins English dictionary",
+      "kind": "book",
+      "isbn": "9789390163816",
+      "coverUrl": "covers/0083fde0df444adc.jpg"
+    },
     {
       "title": "Greater Magadha",
       "kind": "book",
