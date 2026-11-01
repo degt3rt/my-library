@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "exportedAt": 1793536014527,
+  "books": [
+    {
+      "title": "Greater Magadha",
+      "kind": "book",
+      "isbn": "9789359664422",
+      "coverUrl": "covers/e64db9593dc95f9c.jpg"
+    },
+    {
+      "title": "Everyday Lives, Everyday Histories: Beyond the Kings and Brahmanas of `Ancient` India",
+      "kind": "book",
+      "author": "Uma Chakravarti",
+      "isbn": "9788189487959",
+      "publisher": "Columbia University Press",
+      "publishedYear": 2016,
+      "genre": "History, Historiography, Social conditionsIndia",
+      "coverUrl": "covers/48ebe304af14a1ec.jpg"
+    },
+    {
+      "title": "Buddha",
+      "kind": "book",
+      "isbn": "9780007251643",
+      "language": "English",
+      "coverUrl": "covers/d113b383c1f325bf.jpg",
+      "ageGroup": "above-10"
+    },
+    {
+      "title": "Gendering Caste: Through a Feminist Lens",
+      "kind": "book",
+      "author": "Uma Chakravarti",
+      "isbn": "9789381345443",
+      "publisher": "SAGE Publications Pvt. Ltd",
+      "publishedYear": 2019,
+      "genre": "Caste, Feminism, Sex discrimination against women",
+      "coverUrl": "covers/89b0f5cc6f1dae26.jpg"
+    },
+    {
+      "title": "Inner Life Of Animals",
+      "kind": "book",
+      "author": "Peter Wohlleben",
+      "isbn": "9781784705954",
+      "publisher": "Penguin Books UK",
+      "publishedYear": 2018,
+      "genre": "Animal behavior",
+      "coverUrl": "covers/dedfe9d292dffe98.jpg"
+    },
+    {
+      "title": "Social Dimensions of Early Buddhism",
+      "kind": "book",
+      "author": "Uma Chakravarti",
+      "isbn": "9788121507493",
+      "publisher": "South Asia Books",
+      "publishedYear": 1996,
+      "genre": "Buddhism, History, Social aspects",
+      "language": "English",
+      "coverUrl": "covers/dc3f7195ba878866.jpg",
+      "ageGroup": "advanced"
+    }
+  ]
+}
