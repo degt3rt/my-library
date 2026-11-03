@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "exportedAt": 1793704409882,
+  "exportedAt": 1793704669574,
   "keySet": "2e044d4128866a9b",
   "books": [
     {
@@ -11,16 +11,14 @@
       "isbn": "9789354402258",
       "publisher": "Prakash Book Depot",
       "publishedYear": 2021,
-      "coverUrl": "covers/b54cadd5baa5f83d.jpg",
-      "availability": "out"
+      "coverUrl": "covers/b54cadd5baa5f83d.jpg"
     },
     {
       "title": "Kashmir ki Kahaani",
       "kind": "book",
       "key": "ccbdbb5d646a0894",
       "isbn": "9788195694402",
-      "coverUrl": "covers/5c09f04dc512e85d.jpg",
-      "availability": "out"
+      "coverUrl": "covers/5c09f04dc512e85d.jpg"
     },
     {
       "title": "Indica: A Deep Natural History of the Indian Subcontinent [Hardcover] [Nov 15, 2016] Pranay Lal",
@@ -31,24 +29,21 @@
       "publisher": "India Allen Lane",
       "publishedYear": 2016,
       "genre": "Natural history, india, Natural history",
-      "coverUrl": "covers/9e72a3583bfdb151.jpg",
-      "availability": "available"
+      "coverUrl": "covers/9e72a3583bfdb151.jpg"
     },
     {
       "title": "Collins English dictionary",
       "kind": "book",
       "key": "86ff7017062d5c06",
       "isbn": "9789390163816",
-      "coverUrl": "covers/0083fde0df444adc.jpg",
-      "availability": "out"
+      "coverUrl": "covers/0083fde0df444adc.jpg"
     },
     {
       "title": "Greater Magadha",
       "kind": "book",
       "key": "602eea96252d4caf",
       "isbn": "9789359664422",
-      "coverUrl": "covers/e64db9593dc95f9c.jpg",
-      "availability": "available"
+      "coverUrl": "covers/e64db9593dc95f9c.jpg"
     },
     {
       "title": "Everyday Lives, Everyday Histories: Beyond the Kings and Brahmanas of `Ancient` India",
@@ -59,8 +54,7 @@
       "publisher": "Columbia University Press",
       "publishedYear": 2016,
       "genre": "History, Historiography, Social conditionsIndia",
-      "coverUrl": "covers/48ebe304af14a1ec.jpg",
-      "availability": "available"
+      "coverUrl": "covers/48ebe304af14a1ec.jpg"
     },
     {
       "title": "Buddha",
@@ -69,8 +63,7 @@
       "isbn": "9780007251643",
       "language": "English",
       "coverUrl": "covers/d113b383c1f325bf.jpg",
-      "ageGroup": "above-10",
-      "availability": "available"
+      "ageGroup": "above-10"
     },
     {
       "title": "Gendering Caste: Through a Feminist Lens",
@@ -81,8 +74,7 @@
       "publisher": "SAGE Publications Pvt. Ltd",
       "publishedYear": 2019,
       "genre": "Caste, Feminism, Sex discrimination against women",
-      "coverUrl": "covers/89b0f5cc6f1dae26.jpg",
-      "availability": "available"
+      "coverUrl": "covers/89b0f5cc6f1dae26.jpg"
     },
     {
       "title": "Inner Life Of Animals",
@@ -93,8 +85,7 @@
       "publisher": "Penguin Books UK",
       "publishedYear": 2018,
       "genre": "Animal behavior",
-      "coverUrl": "covers/dedfe9d292dffe98.jpg",
-      "availability": "available"
+      "coverUrl": "covers/dedfe9d292dffe98.jpg"
     },
     {
       "title": "Social Dimensions of Early Buddhism",
@@ -107,8 +98,7 @@
       "genre": "Buddhism, History, Social aspects",
       "language": "English",
       "coverUrl": "covers/dc3f7195ba878866.jpg",
-      "ageGroup": "advanced",
-      "availability": "available"
+      "ageGroup": "advanced"
     }
   ]
 }
