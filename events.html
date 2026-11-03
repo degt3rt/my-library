@@ -9,7 +9,9 @@
 
   Placeholders substituted by EventsHtmlBuilder:
     My Library  — HTML-escaped page title/header
-    <p class="empty">No events right now. Check back soon.</p>  — pre-rendered poster <figure> blocks (already escaped),
+    <div class="posters">
+<figure class="poster"><img src="posters/c8eebf60-f6ff-4947-beef-1f57ce1a3846.jpg" alt="Event poster" loading="lazy" /><div class="desc empty">No description.</div></figure>
+</div>  — pre-rendered poster <figure> blocks (already escaped),
                         or an empty-state message when there are none.
 -->
 <html lang="en">
@@ -74,7 +76,9 @@
 <main>
   <h2>📣 Events</h2>
   <p class="intro">What's happening at the library.</p>
-  <p class="empty">No events right now. Check back soon.</p>
+  <div class="posters">
+<figure class="poster"><img src="posters/c8eebf60-f6ff-4947-beef-1f57ce1a3846.jpg" alt="Event poster" loading="lazy" /><div class="desc empty">No description.</div></figure>
+</div>
 </main>
 <script>
   const root = document.documentElement;
