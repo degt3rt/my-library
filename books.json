@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "exportedAt": 1793700310130,
+  "exportedAt": 1793704099957,
   "keySet": "2e044d4128866a9b",
   "books": [
     {
@@ -12,7 +12,7 @@
       "publisher": "Prakash Book Depot",
       "publishedYear": 2021,
       "coverUrl": "covers/b54cadd5baa5f83d.jpg",
-      "availability": "available"
+      "availability": "out"
     },
     {
       "title": "Kashmir ki Kahaani",
